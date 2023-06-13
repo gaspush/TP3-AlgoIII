@@ -7,28 +7,12 @@ using namespace std;
 int n,m,casos;
 vector<int> votos;  
 vector<vector<int>> amistades,capacidad;
-int maxflow(int s, int t) {
-    int flow = 0;
-    vector<int> parent(n);
-    int new_flow;
 
-    while (new_flow = bfs(s, t, parent)) {
-        flow += new_flow;
-        int cur = t;
-        while (cur != s) {
-            int prev = parent[cur];
-            capacidad[prev][cur] -= new_flow;
-            capacidad[cur][prev] += new_flow;
-            cur = prev;
-        }
-    }
-}
 int bfs(int s, int t, vector<int>& parent) {
     fill(parent.begin(), parent.end(), -1);
     parent[s] = -2;
     queue<pair<int, int>> q;
-    q.push({s, 2});
-
+    q.push({s, 1});
     while (!q.empty()) {
         int cur = q.front().first;
         int flow = q.front().second;
@@ -47,26 +31,30 @@ int bfs(int s, int t, vector<int>& parent) {
 
     return 0;
 }
+void maxflow(int s, int t) {
+    int flow = 0;
+    vector<int> parent(n+2);
+    int new_flow;
 
+    while (new_flow = bfs(s, t, parent)) {
+        flow += new_flow;
+        int cur = t;
+        while (cur != s) {
+            int prev = parent[cur];
+            capacidad[prev][cur] -= new_flow;
+            capacidad[cur][prev] += new_flow;
+            cur = prev;
+        }
+    }
+}
 
 int main(){
-    cin >> casos;
-
-    for (int c = 0; c < casos; c++){
-
-        cin >> n >> m; //2 <= n <= 300 estud. m amistades
-        votos=vector<int> (n);
+    cin >> n >> m; //2 <= n <= 300 estud. m amistades
+    while (n!=0 && m!=0){
+    
+        capacidad=vector<vector<int>> (n+2,vector<int>(n+2));
         amistades=vector<vector<int>> (n+2);
-        /*
-        //predecesores = ;
-        //distancias = vector<int> (n+1,1000*n);
-        //distanciasT = vector<int> (n+1,1000*n); //para correr Dijks desde t
-        //adyacencias = 
-        s---atodos los que votan X
-        t---atodos los que votan y
-        distancias[salida] = 0;
-        distanciasT[llegada] = 0;
-        */
+        
         for (int i = 0; i < n; i++){
             int opinion;
             cin >> opinion;
@@ -87,8 +75,7 @@ int main(){
             amistades[u].emplace_back(v);
             amistades[v].emplace_back(u);
         }
-
-        
+        maxflow(0,n+1);
 
     }
     return 0;
