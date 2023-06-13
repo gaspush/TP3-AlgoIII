@@ -11,22 +11,22 @@ vector<vector<tuple<int,int>>> adyacencias;
 vector<vector<tuple<int,int>>> adyacenciasT;
 
 bool const comparar(const tuple<int,int*> a, const tuple<int,int*> b){
-    return get<1>(a) > get<1>(b);
+    return (*get<1>(a)) > (*get<1>(b));
 }
-priority_queue<tuple<int,int*>, vector<tuple<int,int*>>, decltype(&comparar)> Q(comparar);
-priority_queue<tuple<int,int*>, vector<tuple<int,int*>>, decltype(&comparar)> Qt(comparar);
 
+priority_queue<tuple<int,int*>, vector<tuple<int,int*>>, decltype(&comparar)> Qs(comparar);
+priority_queue<tuple<int,int*>, vector<tuple<int,int*>>, decltype(&comparar)> Qt(comparar);
 
 void dijkstra(){
 
     for (int i = 1; i <= n; i++){
         tuple<int,int*> temp = {i,&distancias[i]};
-        Q.emplace(temp);    
+        Qs.emplace(temp);
     }
-    while (!Q.empty())
+    while (!Qs.empty())
     {
-        int a=get<0>(Q.top());
-        Q.pop();
+        int a=get<0>(Qs.top());
+        Qs.pop();
         if (procesado[a]) continue;
         procesado[a]=true;
         for (auto u : adyacencias[a]) {
@@ -35,19 +35,16 @@ void dijkstra(){
             if (distancias[a]+w < distancias[b]) {
                 distancias[b] = distancias[a]+w;
                 tuple<int,int*> temp = {b,&distancias[b]};
-                Q.push(temp);
+                Qs.emplace(temp);
             }
-            
         }
-
     }
-    
 }
 void dijkstra2(){
 
     for (int i = 1; i <= n; i++){
         tuple<int,int*> temp = {i,&distanciasT[i]};
-        Qt.emplace(temp);    
+        Qt.emplace(temp);
     }
     while (!Qt.empty())
     {
@@ -61,12 +58,9 @@ void dijkstra2(){
                 distanciasT[b] = distanciasT[a]+w;
                 tuple<int,int*> temp = {b,&distanciasT[b]};
                 Qt.push(temp);
-            }
-            
+            }            
         }
-
-    }
-    
+    }    
 }
 
 int main(){
@@ -77,20 +71,24 @@ int main(){
         cin >> n >> m >> k >> salida >> llegada;
 
         predecesores = vector<int> (n+1,-1);
+        predecesoresT = vector<int> (n+1,-1);
+        procesado = vector<int> (n+1, false);
+        procesadoT = vector<int> (n+1,false);
         distancias = vector<int> (n+1,1000*n);
         distanciasT = vector<int> (n+1,1000*n); //para correr Dijks desde t
         adyacencias = vector<vector<tuple<int,int>>> (n+1);
+        adyacenciasT = vector<vector<tuple<int,int>>> (n+1);
 
         distancias[salida] = 0;
         distanciasT[llegada] = 0;
-    
+
         for (int i = 0; i < m; i++){
             int u, v, w;
             cin >> u >> v >> w;
             tuple<int,int> tup = {v,w};
-            tuple<int,int> tup2 = {w,v}; // grafo dado vuelta para correr Dijks desde t
+            tuple<int,int> tup2 = {u,w}; // grafo dado vuelta para correr Dijks desde t
             adyacencias[u].emplace_back(tup);
-            adyacenciasT[u].emplace_back(tup2); 
+            adyacenciasT[v].emplace_back(tup2); 
         }
 
         for (int i = 0; i < k; i++){
@@ -101,6 +99,7 @@ int main(){
         }
 
         dijkstra();
+        dijkstra2();
 
     }
     return 0;
