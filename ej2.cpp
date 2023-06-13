@@ -5,8 +5,8 @@
 using namespace std;
 
 int n,m,casos;
-vector<int> votos;  
 vector<vector<int>> amistades,capacidad;
+vector<int> opiniones;
 
 int bfs(int s, int t, vector<int>& parent) {
     fill(parent.begin(), parent.end(), -1);
@@ -31,7 +31,7 @@ int bfs(int s, int t, vector<int>& parent) {
 
     return 0;
 }
-void maxflow(int s, int t) {
+int maxflow(int s, int t) {
     int flow = 0;
     vector<int> parent(n+2);
     int new_flow;
@@ -46,25 +46,29 @@ void maxflow(int s, int t) {
             cur = prev;
         }
     }
+    return flow;
 }
 
 int main(){
     cin >> n >> m; //2 <= n <= 300 estud. m amistades
     while (n!=0 && m!=0){
     
-        capacidad=vector<vector<int>> (n+2,vector<int>(n+2));
+        capacidad=vector<vector<int>> (n+2,vector<int>(n+2,0));
         amistades=vector<vector<int>> (n+2);
+        opiniones = vector<int> (n+1,-1);
         
-        for (int i = 0; i < n; i++){
+        for (int i = 1; i <= n; i++){
             int opinion;
             cin >> opinion;
-            votos[i]=opinion;
+            opiniones[i] = opinion;
             if (opinion){
                 amistades[0].emplace_back(i);
                 amistades[i].emplace_back(0);
+                capacidad[0][i] = capacidad[i][0] = 1;
             }else{
                 amistades[n+1].emplace_back(i);
                 amistades[i].emplace_back(n+1);
+                capacidad[n+1][i] = capacidad[i][n+1] = 1;
             }
         }
 
@@ -74,8 +78,12 @@ int main(){
             
             amistades[u].emplace_back(v);
             amistades[v].emplace_back(u);
+            if (opiniones[u] != opiniones[v]) capacidad[u][v] = capacidad[v][u] = 1;
         }
-        maxflow(0,n+1);
+        int capacidadMinima = maxflow(0,n+1);
+        cout << capacidadMinima << endl;
+
+        cin >> n >> m;
 
     }
     return 0;
