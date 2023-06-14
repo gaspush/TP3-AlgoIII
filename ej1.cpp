@@ -4,11 +4,12 @@
 #include <queue>
 using namespace std;
 
-int casos, n, m, k, salida, llegada;
-vector<tuple<int,int,int>> kaes;
-vector<int> distanciasS, distanciasT, procesados;
-vector<vector<tuple<int,int>>> adyacenciasS;
-vector<vector<tuple<int,int>>> adyacenciasT;
+int casos, n, m, k, salida, llegada;                //Parametros de entrada
+vector<tuple<int,int,int>> kaes;                    //Vector para las calles bidireccionales 
+vector<int> distanciasS, distanciasT;               //Vectores para registrar las distancias de S a todos y de todos a T
+vector<bool> procesados;                            //Indica si un nodo fue procesado por Dijkstra (tendremos nodos repetidos en la queue)
+vector<vector<tuple<int,int>>> adyacenciasS;        //Lista de adyacencias
+vector<vector<tuple<int,int>>> adyacenciasT;        //Lista de adyacencias inversa
 
 bool const comparar(const tuple<int,int> a, const tuple<int,int> b){
     return get<1>(a) > get<1>(b);
@@ -46,11 +47,12 @@ int main(){
 
         cin >> n >> m >> k >> salida >> llegada;
 
-        procesados = vector<int> (n+1, false);
-        distanciasS = vector<int> (n+1,1000*n);
-        distanciasT = vector<int> (n+1,1000*n); //para correr Dijks desde t
+        procesados = vector<bool> (n+1, false);
+        distanciasS = vector<int> (n+1,1000*n); // Inicializamos las distancias en un numero mayor
+        distanciasT = vector<int> (n+1,1000*n); // a la distancia del maximo camino posible (n-1 * 1000)
         adyacenciasS = vector<vector<tuple<int,int>>> (n+1);
         adyacenciasT = vector<vector<tuple<int,int>>> (n+1);
+        kaes.clear();
 
         distanciasS[salida] = 0;
         distanciasT[llegada] = 0;
@@ -59,7 +61,7 @@ int main(){
             int u, v, w;
             cin >> u >> v >> w;
             tuple<int,int> tup = {v,w};
-            tuple<int,int> tup2 = {u,w}; // grafo dado vuelta para correr Dijks desde t
+            tuple<int,int> tup2 = {u,w}; 
             adyacenciasS[u].emplace_back(tup);
             adyacenciasT[v].emplace_back(tup2); 
         }
@@ -78,10 +80,10 @@ int main(){
         int distanciaMinima = distanciasS[llegada];
 
         for(int i = 0; i < kaes.size(); i++){
-            tuple<int,int,int> k = kaes[i];
-            int u = get<0>(k);
-            int v = get<1>(k);
-            int w = get<2>(k);
+            tuple<int,int,int> calle = kaes[i];
+            int u = get<0>(calle);
+            int v = get<1>(calle);
+            int w = get<2>(calle);
             
             int distUV = distanciasS[u] + distanciasT[v] + w;
             int distVU = distanciasS[v] + distanciasT[u] + w;
