@@ -101,6 +101,24 @@ int main(){
         dijkstra();
         dijkstra2();
 
+        int distanciaMinima = distancias[llegada];
+
+        for(int i = 0; i < kaes.size(); i++){
+            tuple<int,int,int> k = kaes[i];
+            int u = get<0>(k);
+            int v = get<1>(k);
+            int w = get<2>(k);
+            
+            int distUV = distancias[u] + distanciasT[v] + w;
+            int distVU = distancias[v] + distanciasT[u] + w;
+
+            if (distUV < distanciaMinima) distanciaMinima = distUV;
+            if (distVU < distanciaMinima) distanciaMinima = distVU;
+        }
+
+        if (distanciaMinima == 1000*n) cout << -1 << endl;
+        else cout << distanciaMinima << endl;
+
     }
     return 0;
 }
