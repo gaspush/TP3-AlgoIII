@@ -1,8 +1,11 @@
 #include <vector>
 #include <iostream>
-#include <tuple>
 #include <queue>
+#include <stdio.h>
+
 using namespace std;
+
+#define INF 100000
 
 int n,m,casos;
 vector<vector<int>> amistades,capacidad;
@@ -12,7 +15,7 @@ int bfs(int s, int t, vector<int>& parent) {
     fill(parent.begin(), parent.end(), -1);
     parent[s] = -2;
     queue<pair<int, int>> q;
-    q.push({s, 1});
+    q.push({s, INF});
     while (!q.empty()) {
         int cur = q.front().first;
         int flow = q.front().second;
@@ -50,7 +53,8 @@ int maxflow(int s, int t) {
 }
 
 int main(){
-    cin >> n >> m; //2 <= n <= 300 estud. m amistades
+    scanf("%i",&n);
+    scanf("%i",&m);//2 <= n <= 300 estud. m amistades
     while (n!=0 && m!=0){
     
         capacidad=vector<vector<int>> (n+2,vector<int>(n+2,0));
@@ -59,7 +63,7 @@ int main(){
         
         for (int i = 1; i <= n; i++){
             int opinion;
-            cin >> opinion;
+            scanf("%i",&opinion);
             opiniones[i] = opinion;
             if (opinion){
                 amistades[0].emplace_back(i);
@@ -74,17 +78,19 @@ int main(){
 
         for (int i = 0; i < m; i++){
             int u, v;
-            cin >> u >> v;
+            scanf("%d%d",&u,&v);
             
             amistades[u].emplace_back(v);
             amistades[v].emplace_back(u);
-            if (opiniones[u] != opiniones[v]) capacidad[u][v] = capacidad[v][u] = 1;
+            capacidad[u][v] = capacidad[v][u] = 1;
         }
         int capacidadMinima = maxflow(0,n+1);
-        cout << capacidadMinima << endl;
+        printf("%i \n",capacidadMinima);
 
-        cin >> n >> m;
+        scanf("%i",&n);
+        scanf("%i",&m);
 
     }
     return 0;
 }
+

@@ -4,7 +4,7 @@
 #include <queue>
 using namespace std;
 
-#define inf = 1e10;
+long long inf = 1e10;
 int casos, n, m, k, salida, llegada;                        // Parametros de entrada
 vector<long long> distanciasS, distanciasT;                       // Vectores para registrar las distancias de S a todos y de todos a T
 vector<bool> procesados;                                    // Indica si un nodo fue procesado por Dijkstra (tendremos nodos repetidos en la queue)
@@ -47,8 +47,8 @@ int main(){
         cin >> n >> m >> k >> salida >> llegada;
 
         procesados = vector<bool> (n+1, false);
-        distanciasS = vector<long long> (n+1,1000*n); // Inicializamos las distancias en un numero mayor
-        distanciasT = vector<long long> (n+1,1000*n); // a la distancia del maximo camino posible (n-1 * 1000)
+        distanciasS = vector<long long> (n+1,inf); // Inicializamos las distancias en un numero mayor
+        distanciasT = vector<long long> (n+1,inf); // a la distancia del maximo camino posible (n-1 * 1000)
         adyacenciasS = vector<vector<tuple<int,int>>> (n+1);
         adyacenciasT = vector<vector<tuple<int,int>>> (n+1);
 
