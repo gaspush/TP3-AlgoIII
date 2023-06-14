@@ -10,18 +10,18 @@ vector<int> distancias, predecesores, procesado, predecesoresT, distanciasT, pro
 vector<vector<tuple<int,int>>> adyacencias;
 vector<vector<tuple<int,int>>> adyacenciasT;
 
-bool const comparar(const tuple<int,int*> a, const tuple<int,int*> b){
-    return (*get<1>(a)) > (*get<1>(b));
+bool const comparar(const tuple<int,int> a, const tuple<int,int> b){
+    return get<1>(a) > get<1>(b);
 }
 
-priority_queue<tuple<int,int*>, vector<tuple<int,int*>>, decltype(&comparar)> Qs(comparar);
-priority_queue<tuple<int,int*>, vector<tuple<int,int*>>, decltype(&comparar)> Qt(comparar);
+priority_queue<tuple<int,int>, vector<tuple<int,int>>, decltype(&comparar)> Qs(comparar);
+priority_queue<tuple<int,int>, vector<tuple<int,int>>, decltype(&comparar)> Qt(comparar);
 
 void dijkstra(){
 
     for (int i = 1; i <= n; i++){
-        tuple<int,int*> temp = {i,&distancias[i]};
-        Qs.emplace(temp);
+        tuple<int,int> temp = {i,distancias[i]};
+        Qs.push(temp);
     }
     while (!Qs.empty())
     {
@@ -34,8 +34,8 @@ void dijkstra(){
             predecesores[b]=a;
             if (distancias[a]+w < distancias[b]) {
                 distancias[b] = distancias[a]+w;
-                tuple<int,int*> temp = {b,&distancias[b]};
-                Qs.emplace(temp);
+                tuple<int,int> temp = {b,distancias[b]};
+                Qs.push(temp);
             }
         }
     }
@@ -43,7 +43,7 @@ void dijkstra(){
 void dijkstra2(){
 
     for (int i = 1; i <= n; i++){
-        tuple<int,int*> temp = {i,&distanciasT[i]};
+        tuple<int,int> temp = {i,distanciasT[i]};
         Qt.emplace(temp);
     }
     while (!Qt.empty())
@@ -56,7 +56,7 @@ void dijkstra2(){
             int b = get<0>(u), w = get<1>(u);
             if (distanciasT[a]+w < distanciasT[b]) {
                 distanciasT[b] = distanciasT[a]+w;
-                tuple<int,int*> temp = {b,&distanciasT[b]};
+                tuple<int,int> temp = {b,distanciasT[b]};
                 Qt.push(temp);
             }            
         }
