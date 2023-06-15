@@ -5,11 +5,10 @@
 
 using namespace std;
 
-#define INF 100000
+const int INF=1e9;
 
 int n,m,casos;
 vector<vector<int>> amistades,capacidad;
-vector<int> opiniones;
 
 int bfs(int s, int t, vector<int>& parent) {
     fill(parent.begin(), parent.end(), -1);
@@ -53,26 +52,27 @@ int maxflow(int s, int t) {
 }
 
 int main(){
-    scanf("%i",&n);
-    scanf("%i",&m);//2 <= n <= 300 estud. m amistades
-    while (n!=0 && m!=0){
+    scanf("%d%d",&n,&m);
+//2 <= n <= 300 estud. m amistades
+    while (n!=0 || m!=0){
     
         capacidad=vector<vector<int>> (n+2,vector<int>(n+2,0));
         amistades=vector<vector<int>> (n+2);
-        opiniones = vector<int> (n+1,-1);
+       
         
         for (int i = 1; i <= n; i++){
             int opinion;
-            scanf("%i",&opinion);
-            opiniones[i] = opinion;
+            scanf("%d",&opinion);
             if (opinion){
                 amistades[0].emplace_back(i);
                 amistades[i].emplace_back(0);
-                capacidad[0][i] = capacidad[i][0] = 1;
+                capacidad[0][i] = 1;
+                capacidad[i][0] = 1;
             }else{
                 amistades[n+1].emplace_back(i);
                 amistades[i].emplace_back(n+1);
-                capacidad[n+1][i] = capacidad[i][n+1] = 1;
+                capacidad[n+1][i] = 1;
+                capacidad[i][n+1] = 1;
             }
         }
 
@@ -82,15 +82,17 @@ int main(){
             
             amistades[u].emplace_back(v);
             amistades[v].emplace_back(u);
-            capacidad[u][v] = capacidad[v][u] = 1;
+            capacidad[u][v] = 1;
+            capacidad[v][u] = 1;
         }
         int capacidadMinima = maxflow(0,n+1);
-        printf("%i \n",capacidadMinima);
+        printf("%d\n",capacidadMinima);
 
-        scanf("%i",&n);
-        scanf("%i",&m);
+        scanf("%d",&n);
+        scanf("%d",&m);
 
     }
     return 0;
 }
+
 
