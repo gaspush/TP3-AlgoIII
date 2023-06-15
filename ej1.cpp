@@ -81,7 +81,7 @@ int main(){
             if (distVU < distanciaMinima) distanciaMinima = distVU; //          o si es conveniente recorrer S -> V -> U -> T
         }
 
-        if (distanciaMinima == 1000*n) cout << -1 << endl; // Si la distancia no cambio desde su inicializacion, el nodo T no es alcanzable desde S
+        if (distanciaMinima == inf) cout << -1 << endl; // Si la distancia no cambio desde su inicializacion, el nodo T no es alcanzable desde S
         else cout << distanciaMinima << endl;
 
     }
